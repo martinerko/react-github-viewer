@@ -1,6 +1,23 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
 export default class TopPanel extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      username: ''
+    };
+  }
+
+  onInputChange(event) {
+    const username = event.target.value
+    this.setState({
+      username: username
+    })
+    //  get user's profile
+    this.props.getUserProfile(username)
+  }
+
   render() {
     return (
       <nav className="navbar navbar-dark navbar-fixed-top bg-inverse">
@@ -19,10 +36,10 @@ export default class TopPanel extends Component {
                   <a className="nav-item nav-link" href="#">Help</a>
               </nav>
               <form className="pull-xs-right">
-                  <input type="text" className="form-control" placeholder="Search..." ></input>
+                  <input type="text" className="form-control" placeholder="Search..." value={this.state.username} onChange={event => this.onInputChange(event)} />
               </form>
           </div>
       </nav>
-    );
+      );
   }
 }

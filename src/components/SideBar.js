@@ -1,5 +1,4 @@
-
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
 export default class SideBar extends Component {
   render() {
@@ -24,6 +23,6 @@ export default class SideBar extends Component {
               <li><a href="">Another nav item</a></li>
           </ul>
       </div>
-    );
+      );
   }
 }
