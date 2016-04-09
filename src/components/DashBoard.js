@@ -38,13 +38,7 @@ export default class DashBoard extends Component {
     const {login, data} = this.props
     const title = login ? `${login}'s profile` : ''
 
-    let content
-    if (this.props.error) {
-      content = this.renderError();
-    } else {
-      content = this.renderProfile();
-    }
-
+    const content = this[this.props.error ? 'renderError' : 'renderProfile']()
     return (
       <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <h1 className="page-header">Dashboard</h1>

@@ -6,9 +6,14 @@ import SideBar from '../components/SideBar'
 import DashBoard from '../components/DashBoard'
 import * as GithubActions from '../actions'
 import debounce from 'lodash.debounce'
+import { GITHUB_LOGIN } from '../constants/Defaults'
 
 
 class App extends Component {
+  componentDidMount() {
+    //preload default user
+    this.props.actions.getUserProfile(GITHUB_LOGIN)
+  }
 
   render() {
     const {githubData, actions} = this.props
@@ -23,7 +28,7 @@ class App extends Component {
         <TopPanel getUserProfile={getUserProfile} />
         <div className="container-fluid">
           <div className="row">
-            <SideBar />
+            <SideBar {...githubData} />
             <DashBoard {...githubData} />
           </div>
         </div>

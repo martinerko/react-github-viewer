@@ -27,7 +27,7 @@ export default class TopPanel extends Component {
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
           </button>
-          <a className="navbar-brand" href="#">Project name</a>
+          <a className="navbar-brand" href="#">Contribution viewer</a>
           <div id="navbar">
               <nav className="nav navbar-nav pull-xs-left">
                   <a className="nav-item nav-link" href="#">Dashboard</a>
