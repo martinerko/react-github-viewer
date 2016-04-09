@@ -1,4 +1,4 @@
-import { GET_USER_PROFILE, GET_PR, GET_COMMITS } from '../constants/ActionTypes'
+import { GET_USER_PROFILE, GET_PR, GET_COMMITS, GET_REPOSITORIES, GET_ISSUES } from '../constants/ActionTypes'
 import axios from 'axios'
 
 const CLIENT_ID = '2161b6f34365089c494d'
@@ -7,26 +7,32 @@ const ROOT_URL = `https://api.github.com/users`
 const AUTH_PARAMS = `client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`
 
 export function getUserProfile(login) {
-  const url = `${ROOT_URL}/${login}?${AUTH_PARAMS}`
-  return axios.get(url)
-    .then(processResult.bind(null, GET_USER_PROFILE, login))
-    .catch(processError.bind(null, GET_USER_PROFILE, login));
+  return getGithubData(GET_USER_PROFILE, login);
 }
 
 export function getPullRequests(login) {
-  return {
-    type: GET_PR,
-    payload: null //TODO
-  }
+  return getGithubData(GET_PR, login, '/repos?');
 }
 
-export function getCommits(login) {
-  return {
-    type: GET_COMMITS,
-    payload: null //TODO
-  }
+export function getCommits(login, repositories = []) {
+  //https://api.github.com/repos/martinerko/xstyle/commits?author=martinerko
+  return getGithubData(GET_COMMITS, login, '/repos?');
 }
 
+export function getRepositories(login) {
+  return getGithubData(GET_REPOSITORIES, login, '/repos?type=owner&');
+}
+
+export function getIssues(login) {
+  return getGithubData(GET_ISSUES, login, '/repos?type=owner&');
+}
+
+function getGithubData(actionType, login, what = '?') {
+  const url = `${ROOT_URL}/${login}${what}${AUTH_PARAMS}`
+  return axios.get(url)
+    .then(processResult.bind(null, actionType, login))
+    .catch(processError.bind(null, actionType, login));
+}
 
 function processResult(type, login, {data}) {
   return {

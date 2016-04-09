@@ -11,7 +11,7 @@ import { GITHUB_LOGIN } from '../constants/Defaults'
 
 class App extends Component {
   componentDidMount() {
-    //preload default user
+    //preload data for default user
     this.props.actions.getUserProfile(GITHUB_LOGIN)
   }
 
@@ -28,7 +28,7 @@ class App extends Component {
         <TopPanel getUserProfile={getUserProfile} />
         <div className="container-fluid">
           <div className="row">
-            <SideBar {...githubData} />
+            <SideBar {...githubData} {...actions} />
             <DashBoard {...githubData} />
           </div>
         </div>
