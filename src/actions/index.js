@@ -1,10 +1,13 @@
 import { GET_USER_PROFILE, GET_PR, GET_COMMITS, GET_REPOSITORIES, GET_ISSUES } from '../constants/ActionTypes'
+import { CLIENT_ID, CLIENT_SECRET } from '../constants/Defaults';
 import axios from 'axios'
+import github from 'github-user-contributions'
+import Promise from 'bluebird'
 
-const CLIENT_ID = '2161b6f34365089c494d'
-const CLIENT_SECRET = '987b150832f7e50fbb91409149b6d4cd95e0c9b3'
-const ROOT_URL = `https://api.github.com/users`
+const ROOT_URL = 'https://api.github.com/users'
 const AUTH_PARAMS = `client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}`
+const client = github.client(CLIENT_ID, CLIENT_SECRET)
+
 
 export function getUserProfile(login) {
   return getGithubData(GET_USER_PROFILE, login);
@@ -14,8 +17,20 @@ export function getPullRequests(login) {
   return getGithubData(GET_PR, login, '/repos?');
 }
 
-export function getCommits(login, repositories = []) {
+export function getCommits(login) {
   //https://api.github.com/repos/martinerko/xstyle/commits?author=martinerko
+  return new Promise(function(resolve, reject) {
+    client.commits(login, function(err, data) {
+      if (err) {
+
+      }
+      const result = processResult(GET_COMMITS, login, {
+        data
+      });
+      resolve(result);
+    })
+
+  });
   return getGithubData(GET_COMMITS, login, '/repos?');
 }
 

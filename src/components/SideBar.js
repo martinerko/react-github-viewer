@@ -6,6 +6,11 @@ export default class SideBar extends Component {
     super(props)
   }
 
+  getUserProfile(e){
+    e.preventDefault();
+    this.props.getUserProfile(this.props.login);
+  }
+
   getRepositories(e) {
     e.preventDefault();
     this.props.getRepositories(this.props.login);
@@ -74,11 +79,9 @@ export default class SideBar extends Component {
 
     return (
       <div className="list-group">
-        <a href="#" className={activeOverwiew}>Overview</a>
+        <a href="#" className={activeOverwiew} onClick={event => this.getUserProfile(event)}>Overview</a>
         <a href="#" className={activeRepositories} onClick={event => this.getRepositories(event)}>Repositories</a>
         <a href="#" className={activeCommits} onClick={event => this.getCommits(event)}>Commits</a>
-        <a href="#" className={activePullRequests} onClick={event => this.getPullRequests(event)}>Pull Requests</a>
-        <a href="#" className={activeIssues} onClick={event => this.getIssues(event)}>Issues</a>
       </div>
       );
   }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { GET_USER_PROFILE, GET_PR, GET_COMMITS, GET_REPOSITORIES } from '../constants/ActionTypes'
 import Repositories from './Repositories'
+import Commits from './Commits'
 
 export default class DashBoard extends Component {
   constructor(props) {
@@ -46,7 +47,10 @@ export default class DashBoard extends Component {
 
     switch (type) {
       case GET_REPOSITORIES:
-        additionalContent = <Repositories repositories={data.repositories} />
+        additionalContent = <Repositories data={data.repositories} />
+        break
+      case GET_COMMITS:
+        additionalContent = <Commits data={data.commits} />
         break
       default:
         break

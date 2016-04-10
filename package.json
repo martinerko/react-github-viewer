@@ -25,6 +25,8 @@
   },
   "dependencies": {
     "axios": "^0.9.1",
+    "bluebird": "^3.3.4",
+    "github-user-contributions": "^0.1.0",
     "lodash.debounce": "^4.0.4",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",

@@ -2,14 +2,23 @@ import React, { Component } from 'react'
 
 export default class Repositories extends Component {
 
-  rendreEmptyLine(colSpan, text) {
+  constructor(props) {
+    super(props)
+
+    this.title = 'Public repositories'
+    this.noDataMessage = 'No public repositories'
+    this.headers = ['Name', 'Description']
+  }
+
+  rendreNoDataLine(colSpan) {
     return (
       <tr>
-          <td colSpan={colSpan}>{text}</td>
+          <td colSpan={this.headers.length}>{this.noDataMessage}</td>
       </tr>
     )
   }
-  renderRepositoryLine(repo) {
+
+  renderTableLine(repo) {
     return (
       <tr key={repo.id}>
           <td><a href={repo.html_url} title={repo.name} target="_blank">{repo.name}</a></td>
@@ -18,18 +27,21 @@ export default class Repositories extends Component {
     )
   }
 
+  renderHeaders() {
+    return this.headers.map(text => <th key={text}>{text}</th>)
+  }
+
   render() {
-    const { repositories } = this.props
-    const lines = repositories.length ? repositories.map(this.renderRepositoryLine) : rendreEmptyLine(2, 'No public repositories')
+    const {data} = this.props
+    const lines = data.length ? data.map(this.renderTableLine) : rendreNoDataLine()
 
     return (
       <div className="table-responsive text-xs-left">
-        <h3>Public repositories</h3>
+        <h3>{ this.title }</h3>
         <table className="table table-striped">
           <thead>
               <tr>
-                  <th>Name</th>
-                  <th>Description</th>
+                  { this.renderHeaders() }
               </tr>
           </thead>
           <tbody>

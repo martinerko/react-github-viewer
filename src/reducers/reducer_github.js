@@ -38,7 +38,9 @@ function mergeStateWithActionData(state, {type, data}) {
     case GET_PR:
       return data;
     case GET_COMMITS:
-      return data;
+      return Object.assign({}, state.data, {
+        commits: processCommits(data)
+      });
     case GET_REPOSITORIES:
       //enhance original state with info about repositories
       return Object.assign({}, state.data, {
@@ -49,4 +51,28 @@ function mergeStateWithActionData(state, {type, data}) {
     default:
       return data;
   }
+}
+
+function processCommits(repositories) {
+  let commitsMap = repositories.reduce(function(commitsMap, branches) {
+    return branches.reduce(function(commitsMap, branch) {
+      return branch.commits.reduce(function(commitsMap, {sha, html_url, commit}) {
+        const {message} = commit
+        const {name, date} = commit.author
+        commitsMap[sha] = {
+          sha,
+          message,
+          html_url,
+          name,
+          date
+        }
+        return commitsMap;
+      }, commitsMap);
+    }, commitsMap);
+  }, {});
+
+  let commits = Object.keys(commitsMap).map(key => commitsMap[key]);
+  commits.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+  return commits;
 }
