@@ -10,7 +10,7 @@ export default class Repositories extends Component {
     this.headers = ['Name', 'Description']
   }
 
-  rendreNoDataLine(colSpan) {
+  renderNoDataLine(colSpan) {
     return (
       <tr>
           <td colSpan={this.headers.length}>{this.noDataMessage}</td>
@@ -33,7 +33,7 @@ export default class Repositories extends Component {
 
   render() {
     const {data} = this.props
-    const lines = data.length ? data.map(this.renderTableLine) : rendreNoDataLine()
+    const lines = data.length ? data.map(this.renderTableLine) : this.renderNoDataLine()
 
     return (
       <div className="table-responsive text-xs-left">

@@ -1,60 +1,42 @@
 import React, { Component } from 'react'
-import { GET_USER_PROFILE, GET_PR, GET_COMMITS, GET_REPOSITORIES } from '../constants/ActionTypes'
+import { GET_USER_PROFILE, GET_COMMITS, GET_REPOSITORIES } from '../constants/ActionTypes'
+import Profile from './Profile'
 import Repositories from './Repositories'
 import Commits from './Commits'
 
 export default class DashBoard extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      username: ''
-    };
-  }
 
   renderProfile() {
-    const {data} = this.props
-
     return (
-      <div className="row">
-        <div className="col-md-12">
-          <span className="label label-primary">{data.public_repos} Public Repos</span>
-          <span className="label label-info">{data.followers} Followers</span>
-          <span className="label label-danger">{data.following} Following</span>
-        </div>
-        <div className="col-md-12">
-          <ul className="list-group">
-            <li className="list-group-item"><strong>Name: {data.name}</strong></li>
-            <li className="list-group-item"><strong>Email: {data.email}</strong></li>
-            <li className="list-group-item"><strong>Location: {data.location}</strong></li>
-          </ul>
-        </div>
-      </div>
+      <Profile {...this.props.data} />
     )
   }
-
 
   renderError() {
     return (<div>There was an error while getting profile ({this.props.errorMessage})</div>);
   }
 
-  render() {
-    const {login, error, type, data} = this.props
-    const title = login ? `${login}'s profile` : ''
+  renderAdditionalContent() {
+    const {loading, actions, login, error, type, data} = this.props
 
-    const content = this[error ? 'renderError' : 'renderProfile']()
-    let additionalContent = null
+    if (loading) {
+      return (<div>Loading...</div>);
+    }
 
     switch (type) {
       case GET_REPOSITORIES:
-        additionalContent = <Repositories data={data.repositories} />
-        break
+        return <Repositories data={data.repositories} />
       case GET_COMMITS:
-        additionalContent = <Commits data={data.commits} />
-        break
-      default:
-        break
+        return <Commits data={data.commits} />
     }
+    return null
+  }
+
+
+  render() {
+    const {error, login} = this.props
+    const title = login ? `${login}'s profile` : ''
+    const content = this[error ? 'renderError' : 'renderProfile']()
 
     return (
       <div className="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -63,9 +45,9 @@ export default class DashBoard extends Component {
             { content }
           </div>
           <div className="row placeholders">
-            { additionalContent }
+            { this.renderAdditionalContent() }
           </div>
       </div>
-      );
+    )
   }
 }

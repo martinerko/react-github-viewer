@@ -1,5 +1,4 @@
 export const GET_USER_PROFILE = 'GET_USER_PROFILE'
-export const GET_PR = 'GET_PR'
 export const GET_COMMITS = 'GET_COMMITS'
 export const GET_REPOSITORIES = 'GET_REPOSITORIES'
-export const GET_ISSUES = 'GET_ISSUES'
+export const SHOW_LOADER = 'SHOW_LOADER'

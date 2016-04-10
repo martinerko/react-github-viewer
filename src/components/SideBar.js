@@ -1,51 +1,41 @@
 import React, { Component } from 'react'
-import { GET_USER_PROFILE, GET_PR, GET_COMMITS, GET_REPOSITORIES, GET_ISSUES } from '../constants/ActionTypes'
+import { GET_USER_PROFILE, GET_COMMITS, GET_REPOSITORIES } from '../constants/ActionTypes'
 
 export default class SideBar extends Component {
-  constructor(props) {
-    super(props)
-  }
 
-  getUserProfile(e){
+  getUserProfile(e) {
+    const {login} = this.props;
     e.preventDefault();
-    this.props.getUserProfile(this.props.login);
+
+    this.props.showLoader(login);
+    this.props.getUserProfile(login);
   }
 
   getRepositories(e) {
+    const {login} = this.props;
     e.preventDefault();
-    this.props.getRepositories(this.props.login);
+
+    this.props.showLoader(login);
+    this.props.getRepositories(login);
   }
 
   getCommits(e) {
+    const {login} = this.props;
     e.preventDefault();
-    this.props.getCommits(this.props.login);
-  }
 
-  getPullRequests(e) {
-    e.preventDefault();
-    this.props.getPullRequests(this.props.login);
-  }
-
-  getIssues(e) {
-    e.preventDefault();
-    this.props.getIssues(this.props.login);
+    this.props.showLoader(login);
+    this.props.getCommits(login);
   }
 
   resolveActiveLink() {
-    let [activeRepositories, activePullRequests, activeCommits, activeIssues, activeOverwiew] = 'list-group-item '.repeat(5).trim().split(' ')
+    let [activeRepositories, activeCommits, activeOverwiew] = 'list-group-item '.repeat(3).trim().split(' ')
 
     switch (this.props.type) {
-      case GET_PR:
-        activePullRequests += ' active'
-        break;
       case GET_REPOSITORIES:
         activeRepositories += ' active'
         break;
       case GET_COMMITS:
         activeCommits += ' active'
-        break;
-      case GET_ISSUES:
-        activeIssues += ' active'
         break;
       default:
         activeOverwiew += ' active'
@@ -53,10 +43,8 @@ export default class SideBar extends Component {
     }
 
     return {
-      activePullRequests,
       activeRepositories,
       activeCommits,
-      activeIssues,
       activeOverwiew
     }
   }
@@ -65,7 +53,7 @@ export default class SideBar extends Component {
     return (
       <div className="text-xs-center">
         <img src={this.props.data.avatar_url} className="thumbnail" style={{
-        width: "100%"
+        width: '100%'
       }}/>
         <p className="card-text">
         {this.props.data.name}
@@ -75,7 +63,7 @@ export default class SideBar extends Component {
   }
 
   renderMenu() {
-    const {activeOverwiew, activeRepositories, activeCommits, activePullRequests, activeIssues} = this.resolveActiveLink()
+    const {activeOverwiew, activeRepositories, activeCommits} = this.resolveActiveLink()
 
     return (
       <div className="list-group">

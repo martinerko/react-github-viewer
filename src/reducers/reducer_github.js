@@ -1,25 +1,26 @@
-import { GET_USER_PROFILE, GET_PR, GET_COMMITS, GET_REPOSITORIES, GET_ISSUES } from '../constants/ActionTypes'
+import { GET_USER_PROFILE, GET_COMMITS, GET_REPOSITORIES, SHOW_LOADER } from '../constants/ActionTypes'
 
 const defaults = {
+  loading: true,
   login: '',
   data: {}
 }
 
 export default function (state = defaults, action) {
-  const type = action.type
+  const {type, login, error, errorMessage, loading} = action
 
   switch (type) {
     case GET_USER_PROFILE:
-    case GET_PR:
     case GET_COMMITS:
     case GET_REPOSITORIES:
-    case GET_ISSUES:
-      const {login, error, errorMessage} = action
+    case SHOW_LOADER:
+
       //enhance original data from state with new one.
       //because we want to keep the original info about the user
       const data = mergeStateWithActionData(state, action)
 
       return {
+        loading,
         type,
         data,
         login,
@@ -35,19 +36,17 @@ export default function (state = defaults, action) {
 
 function mergeStateWithActionData(state, {type, data}) {
   switch (type) {
-    case GET_PR:
-      return data;
-    case GET_COMMITS:
-      return Object.assign({}, state.data, {
-        commits: processCommits(data)
-      });
     case GET_REPOSITORIES:
       //enhance original state with info about repositories
       return Object.assign({}, state.data, {
         repositories: data
       });
-    case GET_ISSUES:
-      return data;
+    case GET_COMMITS:
+      return Object.assign({}, state.data, {
+        commits: processCommits(data)
+      });
+    case SHOW_LOADER:
+      return Object.assign({}, state.data);
     default:
       return data;
   }

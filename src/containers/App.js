@@ -7,7 +7,7 @@ import DashBoard from '../components/DashBoard'
 import * as GithubActions from '../actions'
 import debounce from 'lodash.debounce'
 import { GITHUB_LOGIN } from '../constants/Defaults'
-
+import Loader from 'react-loader';
 
 class App extends Component {
   componentDidMount() {
@@ -17,10 +17,9 @@ class App extends Component {
 
   render() {
     const {githubData, actions} = this.props
-
     // debounce search method so we won't be doing unnecessary requests
     const getUserProfile = debounce(username => {
-      actions.getUserProfile(username)
+      this.props.actions.getUserProfile(username)
     }, 300)
 
     return (
