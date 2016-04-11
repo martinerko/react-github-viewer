@@ -25,27 +25,26 @@ export function getCommits(login) {
       if (err) {
         return resolve(Object.assign(processError(GET_COMMITS, login, err), {
           data
-        }));
+        }))
       }
 
       resolve(processResult(GET_COMMITS, login, {
         data
-      }));
+      }))
     })
-
-  });
-  return getGithubData(GET_COMMITS, login, '/repos?');
+  })
+  return getGithubData(GET_COMMITS, login, '/repos?')
 }
 
 export function getRepositories(login) {
-  return getGithubData(GET_REPOSITORIES, login, '/repos?type=owner&');
+  return getGithubData(GET_REPOSITORIES, login, '/repos?type=owner&')
 }
 
 function getGithubData(actionType, login, what = '?') {
   const url = `${ROOT_URL}/${login}${what}${AUTH_PARAMS}`
   return axios.get(url)
     .then(processResult.bind(null, actionType, login))
-    .catch(processError.bind(null, actionType, login));
+    .catch(processError.bind(null, actionType, login))
 }
 
 function processResult(type, login, {data}, loading = false) {

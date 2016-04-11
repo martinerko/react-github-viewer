@@ -3,28 +3,21 @@ import { GET_USER_PROFILE, GET_COMMITS, GET_REPOSITORIES } from '../constants/Ac
 
 export default class SideBar extends Component {
 
-  getUserProfile(e) {
-    const {login} = this.props;
-    e.preventDefault();
+  fireMenuAction(type, e) {
+    const {login} = this.props
+    e.preventDefault()
+    this.props.showLoader(login)
 
-    this.props.showLoader(login);
-    this.props.getUserProfile(login);
-  }
-
-  getRepositories(e) {
-    const {login} = this.props;
-    e.preventDefault();
-
-    this.props.showLoader(login);
-    this.props.getRepositories(login);
-  }
-
-  getCommits(e) {
-    const {login} = this.props;
-    e.preventDefault();
-
-    this.props.showLoader(login);
-    this.props.getCommits(login);
+    switch (type) {
+      case GET_USER_PROFILE:
+        return this.props.getUserProfile(login)
+      case GET_REPOSITORIES:
+        return this.props.getRepositories(login)
+      case GET_COMMITS:
+        return this.props.getCommits(login)
+      default:
+        return
+    }
   }
 
   resolveActiveLink() {
@@ -67,11 +60,11 @@ export default class SideBar extends Component {
 
     return (
       <div className="list-group">
-        <a href="#" className={activeOverwiew} onClick={event => this.getUserProfile(event)}>Overview</a>
-        <a href="#" className={activeRepositories} onClick={event => this.getRepositories(event)}>Repositories</a>
-        <a href="#" className={activeCommits} onClick={event => this.getCommits(event)}>Commits</a>
+        <a href="#" className={activeOverwiew} onClick={this.fireMenuAction.bind(this, GET_USER_PROFILE)}>Overview</a>
+        <a href="#" className={activeRepositories} onClick={this.fireMenuAction.bind(this, GET_REPOSITORIES)}>Repositories</a>
+        <a href="#" className={activeCommits} onClick={this.fireMenuAction.bind(this, GET_COMMITS)}>Commits</a>
       </div>
-      );
+    )
   }
 
   render() {
@@ -88,6 +81,6 @@ export default class SideBar extends Component {
           { card }
           { menu }
       </div>
-      );
+    )
   }
 }

@@ -103,3 +103,17 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
+
+.jumbotron{
+    padding: 27px;
+}
+
+@media (min-width: 500px) {
+  .user-content th:nth-child(1),
+  .user-content td:nth-child(1){
+       width:250px;
+  }
+  .user-content td.date{
+    width:200px;
+  }
+}
