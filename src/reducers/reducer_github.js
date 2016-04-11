@@ -1,4 +1,5 @@
 import { GET_USER_PROFILE, GET_COMMITS, GET_REPOSITORIES, SHOW_LOADER } from '../constants/ActionTypes'
+import moment from 'moment'
 
 const defaults = {
   loading: true,
@@ -28,10 +29,8 @@ export default function (state = defaults, action) {
         errorMessage
       }
     default:
-      break;
+      return state
   }
-
-  return state;
 }
 
 function mergeStateWithActionData(state, {type, data}) {
@@ -40,38 +39,69 @@ function mergeStateWithActionData(state, {type, data}) {
       //enhance original state with info about repositories
       return Object.assign({}, state.data, {
         repositories: data
-      });
+      })
     case GET_COMMITS:
+      const commits = processCommits(data)
       return Object.assign({}, state.data, {
-        commits: processCommits(data)
-      });
+        commits
+      })
     case SHOW_LOADER:
-      return Object.assign({}, state.data);
+      return Object.assign({}, state.data)
     default:
-      return data;
+      return data
   }
 }
 
 function processCommits(repositories) {
-  let commitsMap = repositories.reduce(function(commitsMap, branches) {
+  //get unique commits mapped by sha
+  let shaMap = repositories.reduce(function(commitsMap, branches) {
     return branches.reduce(function(commitsMap, branch) {
-      return branch.commits.reduce(function(commitsMap, {sha, html_url, commit}) {
-        const {message} = commit
-        const {name, date} = commit.author
-        commitsMap[sha] = {
-          sha,
-          message,
-          html_url,
-          name,
-          date
-        }
-        return commitsMap;
-      }, commitsMap);
-    }, commitsMap);
-  }, {});
+      return branch.commits.reduce(commitsMapReducer, commitsMap)
+    }, commitsMap)
+  }, {})
 
-  let commits = Object.keys(commitsMap).map(key => commitsMap[key]);
-  commits.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  //convert them back to array sort them by unix time
+  let commits = Object.keys(shaMap).map(key => shaMap[key])
+  commits.sort((a, b) => b.unix - a.unix)
 
-  return commits;
+  //now create a map where commits are
+  //grouped by years and also contains a calendar heatmap
+  let resultMap = {}
+  commits.forEach(function(commit) {
+    let {year, unix} = commit
+
+    if (!resultMap.hasOwnProperty(year)) {
+      resultMap[year] = {
+        commits: [],
+        calendar: {}
+      }
+    }
+
+    let {commits, calendar} = resultMap[year]
+    //save commit unduer this year
+    commits.push(commit)
+    //mark commit into callendar
+    calendar[unix] = (calendar[unix] || 0) + 1
+  });
+
+  return resultMap;
+}
+
+function commitsMapReducer(commitsMap, {sha, html_url, commit}) {
+  if (!commitsMap.hasOwnProperty(sha)) {
+    const {message, author} = commit
+    const {name, date} = commit.author
+    const dateObj = moment(moment(date).format('YYYY-MM-DD'))
+
+    commitsMap[sha] = {
+      sha,
+      message,
+      html_url,
+      name,
+      date,
+      year: dateObj.format('YYYY'),
+      unix: dateObj.unix()
+    }
+  }
+  return commitsMap
 }
