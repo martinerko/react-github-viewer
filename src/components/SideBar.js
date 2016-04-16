@@ -21,7 +21,7 @@ export default class SideBar extends Component {
   }
 
   resolveActiveLink() {
-    let [activeRepositories, activeCommits, activeOverwiew] = 'list-group-item '.repeat(3).trim().split(' ')
+    let [activeRepositories, activeCommits, activeOverview] = 'list-group-item '.repeat(3).trim().split(' ')
 
     switch (this.props.type) {
       case GET_REPOSITORIES:
@@ -31,14 +31,14 @@ export default class SideBar extends Component {
         activeCommits += ' active'
         break;
       default:
-        activeOverwiew += ' active'
+        activeOverview += ' active'
         break;
     }
 
     return {
       activeRepositories,
       activeCommits,
-      activeOverwiew
+      activeOverview
     }
   }
 
@@ -56,11 +56,11 @@ export default class SideBar extends Component {
   }
 
   renderMenu() {
-    const {activeOverwiew, activeRepositories, activeCommits} = this.resolveActiveLink()
+    const {activeOverview, activeRepositories, activeCommits} = this.resolveActiveLink()
 
     return (
       <div className="list-group">
-        <a href="#" className={activeOverwiew} onClick={this.fireMenuAction.bind(this, GET_USER_PROFILE)}>Overview</a>
+        <a href="#" className={activeOverview} onClick={this.fireMenuAction.bind(this, GET_USER_PROFILE)}>Overview</a>
         <a href="#" className={activeRepositories} onClick={this.fireMenuAction.bind(this, GET_REPOSITORIES)}>Repositories</a>
         <a href="#" className={activeCommits} onClick={this.fireMenuAction.bind(this, GET_COMMITS)}>Commits</a>
       </div>
