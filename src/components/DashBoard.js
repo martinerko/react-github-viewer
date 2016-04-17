@@ -25,7 +25,9 @@ export default class DashBoard extends Component {
 
     if (loading) {
       return (
-        <div>Loading...</div>
+        <div id="loading-overlay">
+          <img src="css/images/gears.gif" id="loading-indicator" />
+        </div>
       )
     }
 
