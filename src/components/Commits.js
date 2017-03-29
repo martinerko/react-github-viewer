@@ -7,7 +7,7 @@ export default class Commits extends Repositories {
   constructor(props) {
     super(props)
 
-    this.title = 'commits'
+    this.title = 'commits (into public repositories)'
     this.noDataMessage = 'No commits'
     this.headers = ['SHA', 'Date', 'Message']
   }
